@@ -38,7 +38,7 @@ class Blockchain:
     
     def is_valid(self, chain):
         for block_index in range(len(chain)):
-            if block_index != 1:
+            if block_index != 0:
                 # check if it still in the chain
                 block = chain[block_index]
                 previous_block = chain[block_index-1]
@@ -47,7 +47,7 @@ class Blockchain:
                 
                 # check whether proof is valid:
                 current_proof = block["proof"]
-                previous_proof = previous_block["block"]
+                previous_proof = previous_block["proof"]
                 hash_operation = hashlib.sha256(str(current_proof**2-previous_proof**2).encode()).hexdigest()
                 if hash_operation[:4] != "0000":
                     return False
