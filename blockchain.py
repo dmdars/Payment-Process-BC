@@ -2,15 +2,14 @@ import datetime
 import hashlib
 import json
 from flask import Flask, jsonify
-import requests
-from uuid import uuid4
-from urllib.parse import urlparse
 
 class Blockchain:
     def __init__(self):
         self.chain = []
+        self.transactions =[]
         self.create_block(1, "-")
-    
+        self.nodes = set()
+
     def create_block(self, proof, previous_hash):
         block = {
             'index': len(self.chain)+1,
@@ -55,42 +54,15 @@ class Blockchain:
                 if hash_operation[:4] != "0000":
                     return False
         return True
-
-    def add_transaction(self, sender, receiver, amount):
-        self.transactions.append({'sender': sender,
-                                  'receiver': receiver,
-                                  'amount': amount})
-        previous_block = self.get_previous_block()
-        return previous_block['index'] + 1
-    
-    def add_node(self, address):
-        parsed_url = urlparse(address)
-        self.nodes.add(parsed_url.netloc)
-    
-    def replace_chain(self):
-        network = self.nodes
-        longest_chain = None
-        max_length = len(self.chain)
-        for node in network:
-            response = requests.get(f'http://{node}/get_chain')
-            if response.status_code == 200:
-                length = response.json()['length']
-                chain = response.json()['chain']
-                if length > max_length and self.is_chain_valid(chain):
-                    max_length = length
-                    longest_chain = chain
-        if longest_chain:
-            self.chain = longest_chain
-            return True
-        return False
                 
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 bc = Blockchain()
 
-@app.route('/mine_block', methods = ['GET'])
-def mine_block():
+# @app.route('/mine_block', methods = ['GET'])
+@app.get('/mine_block')
+async def mine_block():
     previous_block = bc.get_prev_block()
     previous_proof = previous_block["proof"]
     proof = bc.proof_of_work(previous_proof)
@@ -103,7 +75,7 @@ def mine_block():
         "proof": proof,
         "previous_hash": previous_hash
     }
-    return jsonify(response), 200
+    return response
 
 @app.route('/get_chain', methods = ["GET"])
 def get_chain():
