@@ -7,13 +7,13 @@ interface Props {
 const TopLogo = ({csName}:Props) => {
 
 	const [cssName, setCssName] = useState("h1 text-center");
-	csName && setCssName(csName)
+	csName && setCssName(csName);
 
 	return (
 		<>
 			<div className={cssName}> 
 				<p>
-					Big Logo	
+					Big Logo
 				</p>
 			</div>
 		</>

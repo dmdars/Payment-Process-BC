@@ -1,21 +1,16 @@
-
+import './css/LoginPage.css'
 
 const LoginPage = () => {
 
 	return (
 		<>
-			<div className="wrapper fadeInDown">
-				<div className="">
-					<label>Enter your Email/Username:</label>
-					<br />
-					<input type="email" placeholder="Enter your Email/Username"/>
-				</div>
-					<br />
-					<br />
-				<div className="">
-					<label>Enter your Email/Username:</label>
-					<br />
-					<input type="password" placeholder="Enter your password"/>
+			<div className="container">
+				<div className="login">
+					<h1> Welcome to Menta! </h1>
+					<input type="email" placeholder="Username"/>
+					<input type="password" placeholder="Password"/>
+					<br /> <br />
+					<button type='submit' className="btn btn-primary btn-block btn-large">Login</button>
 				</div>
 			</div>
 		</>
